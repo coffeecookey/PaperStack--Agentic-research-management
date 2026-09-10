@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f1ead9;
+  --bg-panel: #e8dfc7;
+  --bg-panel-2: #ded2af;
+  --ink: #2a2318;
+  --ink-soft: #746a57;
+  --ink-faint: #9c9276;
+  --accent: #b8461e;
+  --accent-deep: #8f3714;
+  --accent-ink: #fbf3e7;
+  --line: #d2c6a8;
+  --line-strong: #b7a87f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16130e;
+    --bg-panel: #1f1a11;
+    --bg-panel-2: #292115;
+    --ink: #ede3cd;
+    --ink-soft: #a69874;
+    --ink-faint: #7a6f55;
+    --accent: #e17a3e;
+    --accent-deep: #f2955c;
+    --accent-ink: #1b140c;
+    --line: #3a3020;
+    --line-strong: #4f4128;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-panel: var(--bg-panel);
+  --color-bg-panel-2: var(--bg-panel-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-ink: var(--accent-ink);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>');
+  z-index: 0;
+}
+
+.grid-texture {
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 28px);
+}
