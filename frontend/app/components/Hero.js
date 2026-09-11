@@ -1,4 +1,4 @@
-import Image from "next/image";
+import HeroVisual from "./HeroVisual";
 
 const readouts = [
   { label: "Papers indexed", value: "1,204" },
@@ -9,36 +9,52 @@ const readouts = [
 
 export default function Hero() {
   return (
-    <main className="relative z-10 mx-auto grid max-w-295 grid-cols-1 items-start gap-14 px-5 pt-8 pb-14 sm:px-8 sm:pt-10 md:mx-0 md:max-w-none md:flex-1 md:min-h-0 md:grid-cols-[minmax(0,40rem)_1fr] md:grid-rows-1 md:items-stretch md:gap-10 md:overflow-hidden md:pt-10 md:pb-10 md:pr-0 md:pl-[max(2rem,calc((100vw-73.75rem)/2+2rem))]">
-      <div className="md:self-center">
-        <h1 className="mb-5.5 text-[clamp(2.6rem,4.6vw,4.15rem)] leading-[1.04] font-display font-medium tracking-tight text-balance">
+    <main className="hero-grid relative z-10 mx-auto flex max-w-295 flex-1 flex-col justify-center px-5 pt-10 pb-14 sm:px-8 md:px-12">
+      <div className="hero-visual-col">
+        <HeroVisual />
+      </div>
+
+      <div className="max-w-184">
+        <h1
+          className="enter-up mb-5.5 text-[clamp(2.6rem,6vw,4.6rem)] leading-[1.04] font-display font-medium tracking-tight text-balance"
+          style={{ "--stagger": "120ms" }}
+        >
           Welcome to
           <span className="mt-[0.06em] block font-bold text-accent">Paper Stack</span>
         </h1>
 
-        <p className="mb-8.5 max-w-[46ch] text-[0.9375rem] leading-[1.75] text-ink-soft">
-          Track papers, thread citations, and keep the marginalia that mattered — one quiet
+        <p
+          className="enter-up mb-8.5 max-w-[46ch] text-[0.9375rem] leading-[1.75] text-ink-soft"
+          style={{ "--stagger": "260ms" }}
+        >
+          Track papers, thread citations, and keep the marginalia that mattered, one quiet
           archive for the reading you&rsquo;re actually doing.
         </p>
 
-        <div className="mb-9.5 flex flex-wrap gap-3.5">
+        <div className="enter-up mb-9.5 flex flex-wrap gap-3.5" style={{ "--stagger": "380ms" }}>
           <a
             href="#"
-            className="inline-flex items-center gap-2 rounded-sm border border-accent bg-accent px-5.5 py-3.25 text-[0.8125rem] tracking-wide text-accent-ink transition-colors hover:border-accent-deep hover:bg-accent-deep"
+            className="btn-pressure inline-flex items-center gap-2 rounded-sm border border-accent bg-accent px-5.5 py-3.25 text-[0.8125rem] tracking-wide text-accent-ink transition-colors hover:border-accent-deep hover:bg-accent-deep"
           >
             Begin your archive&nbsp;&rarr;
           </a>
           <a
             href="#"
-            className="inline-flex items-center gap-2 rounded-sm border border-line-strong px-5.5 py-3.25 text-[0.8125rem] tracking-wide transition-colors hover:border-ink"
+            className="btn-pressure inline-flex items-center gap-2 rounded-sm border border-line-strong px-5.5 py-3.25 text-[0.8125rem] tracking-wide transition-colors hover:border-ink"
           >
             View the manifest
           </a>
         </div>
 
-        <hr className="mb-6.5 border-line" />
+        <hr
+          className="enter-up mb-6.5 origin-left border-line"
+          style={{ "--stagger": "460ms" }}
+        />
 
-        <dl className="grid grid-cols-2 gap-x-7.5 gap-y-4.5 sm:grid-cols-4 sm:gap-y-0">
+        <dl
+          className="enter-up grid grid-cols-2 gap-x-7.5 gap-y-4.5 sm:grid-cols-4 sm:gap-y-0"
+          style={{ "--stagger": "520ms" }}
+        >
           {readouts.map((item) => (
             <div
               key={item.label}
@@ -48,23 +64,12 @@ export default function Hero() {
                 {item.label}
               </dt>
               <dd className="m-0 flex items-center gap-1.5 text-sm font-medium tabular-nums">
-                {item.dot && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
+                {item.dot && <span className="h-1.5 w-1.5 rounded-full bg-accent status-pulse" />}
                 {item.value}
               </dd>
             </div>
           ))}
         </dl>
-      </div>
-
-      <div className="relative aspect-380/672 overflow-hidden md:aspect-auto md:-mt-10 md:-mb-10 md:h-[calc(100%+5rem)]">
-        <Image
-          src="/home.jpg"
-          alt="Illustration of a laptop showing terminal text, resting on a stack of papers on a wooden desk"
-          fill
-          className="object-cover object-top"
-          sizes="(min-width: 768px) 55vw, 90vw"
-          priority
-        />
       </div>
     </main>
   );

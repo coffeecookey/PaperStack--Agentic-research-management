@@ -63,8 +63,240 @@ body::before {
   z-index: 0;
 }
 
-.grid-texture {
-  background-image:
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0 1px, transparent 1px 28px);
+/* Lenis base rules, https://lenis.darkroom.engineering */
+html.lenis {
+  height: auto;
+}
+html.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* custom cursor hides the native one only once the replacement is active */
+html.cursor-none,
+html.cursor-none a,
+html.cursor-none button {
+  cursor: none;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  background: transparent;
+  border: 1.5px solid #fff;
+  transition: width 0.3s var(--ease-snap), height 0.3s var(--ease-snap), margin 0.3s var(--ease-snap);
+}
+
+.cursor-ring--active {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ---------------------------------------------------------------- */
+/* Motion system                                                    */
+/* ---------------------------------------------------------------- */
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes enter-up {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes enter-scale {
+  from { opacity: 0; transform: scale(1.04); filter: blur(6px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+.enter-up {
+  animation: enter-up 0.8s var(--ease-out) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+.enter-scale {
+  animation: enter-scale 0.9s var(--ease-out) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+/* nav link stagger on page load */
+.nav-links > a {
+  opacity: 0;
+  animation: enter-up 0.7s var(--ease-out) both;
+}
+.nav-links > a:nth-child(1) { animation-delay: 140ms; }
+.nav-links > a:nth-child(2) { animation-delay: 200ms; }
+.nav-links > a:nth-child(3) { animation-delay: 260ms; }
+
+/* sliding underline on hover */
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-snap);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.link-underline--active::after {
+  background: var(--accent);
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* button press feel: compress + inner shadow, replaces a plain color hover */
+.btn-pressure {
+  transition:
+    transform 0.5s var(--ease-snap),
+    box-shadow 0.3s var(--ease-snap),
+    filter 0.3s var(--ease-snap);
+}
+.btn-pressure:hover {
+  transform: scale(0.97);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  filter: brightness(1.05);
+}
+.btn-pressure:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s;
+}
+
+/* scroll-triggered reveal, toggled by ScrollReveal via IntersectionObserver */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* hero visual: left-side 3D paper stack, desktop pointer-fine only.
+   Gated in CSS (not just JS) so the grid never reserves an empty
+   column for touch/reduced-motion visitors who get no visual at all. */
+.hero-visual-col {
+  display: none;
+}
+
+@media (min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    align-items: center;
+    gap: 3rem;
+  }
+  .hero-visual-col {
+    display: block;
+  }
+}
+
+.hero-stack {
+  perspective: 1100px;
+  animation: hero-stack-drift-x 9s var(--ease-in-out) infinite alternate;
+}
+
+.hero-stack-drift-y {
+  animation: hero-stack-drift-y 13s var(--ease-in-out) infinite alternate;
+}
+
+.hero-stack-group {
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.hero-stack-card {
+  transform-style: preserve-3d;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes hero-stack-drift-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(10px); }
+}
+
+@keyframes hero-stack-drift-y {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+/* status dot breathing pulse, for "active/synced" indicators */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.status-pulse {
+  animation: status-pulse 2.2s var(--ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter-up,
+  .enter-scale,
+  .nav-links > a,
+  .status-pulse {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .btn-pressure:hover,
+  .btn-pressure:active {
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+  .hero-stack,
+  .hero-stack-drift-y {
+    animation: none !important;
+  }
 }
